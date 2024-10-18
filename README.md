@@ -65,15 +65,6 @@ _bit_range: 50
 
 [+] Waiting for the bit range key '2^49...2^50-1'
 
-[+] Found file: 'KEYFOUNDKEYFOUND.txt'
-
-[+] Found Key: 22bd43c2e9354
-[+] Key HEX: 00000000000000000000000000000000000000000000000000022bd43c2e9354
-{"status_code":200,"message":"Request processed successfully","data":{"success":"Ok"}}
-[+] Key successfully sent to the server!](<_bit_range: 50
-
-[+] Waiting for the bit range key '2^49...2^50-1'
-
 [-] Nothing here yet! | check_count: 33
 
 [+] Found file: 'KEYFOUNDKEYFOUND.txt'
