@@ -26,12 +26,10 @@ void init_client(SimpleClient *client) {
 
     if (client->url == NULL) {
         client->url = "";
-        printf("\n[!] Empty URL!\n");
     }
 
     if (client->token == NULL) {
         client->token = "";
-        printf("\n[!] Empty token!\n");
     }
 }
 
@@ -73,11 +71,13 @@ CURLcode simple_client_post(SimpleClient *client, Payload *payload) {
     return res;
 }
 
-void handle_response(CURLcode res) {
+int handle_response(CURLcode res) {
     if (res != CURLE_OK) {
         fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+        return 0;
     } else {
         printf("\n[+] Key successfully sent to the server!\n");
+        return 1;
     }
 }
 
@@ -118,10 +118,31 @@ void fileContent(const char *filename, char *bitRange) {
                 payload.bit_range = bitRange;
                 payload.private_key = private_key;
                 payload.private_key_hex = keyHex;
-                
-                CURLcode res = simple_client_post(&client, &payload);
 
-                handle_response(res);
+                int response;
+                long successResponseAttempts = 1;
+                
+                do {
+                    CURLcode res = simple_client_post(&client, &payload);
+                    response = handle_response(res);
+                    
+                    if (response == -1) {
+                        printf("\r[-] Error processing response | attempts: %ld", successResponseAttempts);
+                        fflush(stdout);
+            
+                        sleep(10);
+
+                        successResponseAttempts++;
+                        continue;
+                    }
+
+                    if (response) {
+                        break;
+                    } else {
+                        sleep(10);
+                    }
+
+                } while (!response);
             }
             break;
         }
@@ -144,11 +165,11 @@ int main() {
     
     snprintf(bitRange, sizeof(bitRange), "2^%d...2^%d-1", targetRange - 1, targetRange);
 
-    printf("\n[+] Waiting for the bit range key '%s'\n\n", bitRange);
+    printf("\n[+] Waiting for the bit range key '%s'\n", bitRange);
 
     while (counter) {
         if (fileExistenceChecker(fileName)) {
-            printf("\n\n[+] Found file: '%s'\n\n", fileName);
+            printf("\n[+] Found file: '%s'\n\n", fileName);
             
             fileContent(fileName, bitRange);
             
