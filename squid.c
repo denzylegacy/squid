@@ -144,11 +144,11 @@ int main() {
     
     snprintf(bitRange, sizeof(bitRange), "2^%d...2^%d-1", targetRange - 1, targetRange);
 
-    printf("\n[+] Waiting for the bit range key '%s'\n", bitRange);
+    printf("\n[+] Waiting for the bit range key '%s'\n\n", bitRange);
 
     while (counter) {
         if (fileExistenceChecker(fileName)) {
-            printf("\n[+] Found file: '%s'\n\n", fileName);
+            printf("\n\n[+] Found file: '%s'\n\n", fileName);
             
             fileContent(fileName, bitRange);
             
